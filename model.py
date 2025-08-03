@@ -19,7 +19,7 @@ def list_models():
     response.raise_for_status()
     return response.json()  # returns list of models
 
-def chat_with_sealion(prompt, model="aisingapore/Llama-SEA-LION-v3-70B-IT", max_tokens=20):
+def chat_with_sealion(prompt, model="aisingapore/Llama-SEA-LION-v3-70B-IT", max_tokens=10):
     url = f"{BASE_URL}/chat/completions"
     payload = {
         "model": model,
