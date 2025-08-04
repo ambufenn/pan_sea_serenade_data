@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SEA-LION Chatbox</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; padding: 20px; }
+    #chatbox { width: 100%; max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #fafafa; }
+    .message { margin: 5px 0; }
+    .user { text-align: right; color: blue; }
+    .bot { text-align: left; color: green; }
+    input, button { padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <h2>Chat with SEA-LION</h2>
+    <div id="messages"></div>
+    <input type="text" id="input" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const inputBox = document.getElementById('input');
+      const messages = document.getElementById('messages');
+      const userMsg = inputBox.value;
+      if (!userMsg) return;
+
+      // Display user message
+      messages.innerHTML += `<div class="message user">You: ${userMsg}</div>`;
+      inputBox.value = '';
+      messages.scrollTop = messages.scrollHeight;
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: userMsg })
+        });
+        const data = await res.json();
+
+        // Display model reply
+        messages.innerHTML += `<div class="message bot">SEA-LION: ${data.reply}</div>`;
+        messages.scrollTop = messages.scrollHeight;
+      } catch (err) {
+        messages.innerHTML += `<div class="message bot">Error: ${err.message}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
